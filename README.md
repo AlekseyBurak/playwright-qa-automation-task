@@ -84,9 +84,6 @@ npm run format
 - `tests/api` - API tests using Playwright request fixtures.
 - `tests/e2e` - end-to-end user journey tests.
 
-Current spec files are placeholders marked with `test.skip`. Replace them with
-real test cases as coverage is added.
-
 ## Page Objects
 
 Page objects live in `src/pages`:
@@ -104,10 +101,6 @@ Reusable components live in `src/pages/components`:
 - `TagsSidebarComponent`
 - `DeleteTodoModalComponent`
 - `AdminJsonModalComponent`
-
-Locators avoid visible text and accessible names so tests are less sensitive to
-localization. Prefer `data-ui`; otherwise use stable attributes such as `href`,
-`type`, and `data-filter`.
 
 Example:
 
@@ -138,8 +131,8 @@ Supported environment variables:
 - `TEST_USER_EMAIL` - UI/E2E test user email.
 - `TEST_USER_PASSWORD` - UI/E2E test user password.
 - `API_TOKEN` - API token/access key fallback.
-- `X_ACCESS_KEY` - access key sent as the `X-Access-Key` header. If omitted,
-  `API_TOKEN` is used as fallback.
+- `X_ACCESS_KEY` - access key sent as the `X-Access-Key` header. If omitted, `API_TOKEN`
+  is used as fallback.
 - `LOG_LEVEL` - `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL`. Defaults to
   `CRITICAL`.
 
@@ -196,14 +189,3 @@ The test job reads these GitHub Actions secrets:
 
 Playwright reports and test results are uploaded as artifacts when the test job
 fails.
-
-## Publishing To GitHub
-
-Before the first commit, confirm ignored files are not staged:
-
-```bash
-git status --short
-```
-
-Then initialize, commit, create an empty GitHub repo, add it as `origin`, and
-push `main`. Do not commit `.env`.
