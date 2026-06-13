@@ -44,6 +44,22 @@ export abstract class BaseApiClient {
     return response;
   }
 
+  protected async put(
+    path: string,
+    data?: unknown,
+    options: RequestOptions = {},
+  ): Promise<APIResponse> {
+    const headers = this.headers(options.headers);
+    this.logRequest('PUT', path, { data, headers });
+    const response = await this.request.put(path, {
+      data,
+      headers,
+    });
+    this.logResponse('PUT', path, response);
+
+    return response;
+  }
+
   protected async patch(
     path: string,
     data?: unknown,
