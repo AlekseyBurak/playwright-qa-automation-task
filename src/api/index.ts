@@ -1,5 +1,6 @@
 export type { AdminOverviewParams } from './admin.api-client';
 export { AdminApiClient } from './admin.api-client';
+export { AnalyticsApiClient } from './analytics.api-client';
 export { ApplicationsApiClient } from './applications.api-client';
 export type { RegisterUserPayload } from './auth.api-client';
 export { AuthApiClient } from './auth.api-client';

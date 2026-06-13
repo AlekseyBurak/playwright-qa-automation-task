@@ -115,6 +115,7 @@ API clients live in `src/api`:
 - `ApplicationsApiClient`
 - `AuthApiClient`
 - `AdminApiClient`
+- `AnalyticsApiClient`
 - `ProfileApiClient`
 - `TodoApiClient`
 - `UploadApiClient`
@@ -131,6 +132,8 @@ Supported environment variables:
 - `TEST_USER_EMAIL` - UI/E2E test user email.
 - `TEST_USER_PASSWORD` - UI/E2E test user password.
 - `API_TOKEN` - API token/access key fallback.
+- `ANALYTICS_BASIC_USER` - username for analytics events Basic Auth.
+- `ANALYTICS_BASIC_PASSWORD` - password for analytics events Basic Auth.
 - `X_ACCESS_KEY` - access key sent as the `X-Access-Key` header. If omitted, `API_TOKEN`
   is used as fallback.
 - `LOG_LEVEL` - `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL`. Defaults to
@@ -186,6 +189,8 @@ The test job reads these GitHub Actions secrets:
 - `TEST_USER_EMAIL`
 - `TEST_USER_PASSWORD`
 - `API_TOKEN`
+- `ANALYTICS_BASIC_USER`
+- `ANALYTICS_BASIC_PASSWORD`
 
 Playwright reports and test results are uploaded as artifacts when the test job
 fails.

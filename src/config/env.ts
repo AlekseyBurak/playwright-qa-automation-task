@@ -10,10 +10,13 @@ type Environment = {
   apiBaseUrl: string;
   apiToken?: string;
   xAccessKey?: string;
+  analyticsBasicUser?: string;
+  analyticsBasicPassword?: string;
   logLevel: string;
   testUser: TestUser;
   requireApiToken: () => string;
   requireXAccessKey: () => string;
+  requireAnalyticsBasicAuth: () => { username: string; password: string };
   requireTestUser: () => Required<TestUser>;
 };
 
@@ -40,6 +43,8 @@ export const env: Environment = {
   apiBaseUrl: getOptional('API_BASE_URL') ?? baseUrl,
   apiToken: getOptional('API_TOKEN'),
   xAccessKey: getOptional('X_ACCESS_KEY') ?? getOptional('API_TOKEN'),
+  analyticsBasicUser: getOptional('ANALYTICS_BASIC_USER'),
+  analyticsBasicPassword: getOptional('ANALYTICS_BASIC_PASSWORD'),
   logLevel: getOptional('LOG_LEVEL') ?? 'CRITICAL',
   testUser: {
     email: getOptional('TEST_USER_EMAIL'),
@@ -47,6 +52,10 @@ export const env: Environment = {
   },
   requireApiToken: () => getRequired('API_TOKEN'),
   requireXAccessKey: () => getOptional('X_ACCESS_KEY') ?? getRequired('API_TOKEN'),
+  requireAnalyticsBasicAuth: () => ({
+    username: getRequired('ANALYTICS_BASIC_USER'),
+    password: getRequired('ANALYTICS_BASIC_PASSWORD'),
+  }),
   requireTestUser: () => ({
     email: getRequired('TEST_USER_EMAIL'),
     password: getRequired('TEST_USER_PASSWORD'),

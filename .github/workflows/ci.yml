@@ -43,6 +43,8 @@ jobs:
       TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
       TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
       API_TOKEN: ${{ secrets.API_TOKEN }}
+      ANALYTICS_BASIC_USER: ${{ secrets.ANALYTICS_BASIC_USER }}
+      ANALYTICS_BASIC_PASSWORD: ${{ secrets.ANALYTICS_BASIC_PASSWORD }}
 
     steps:
       - name: Checkout
