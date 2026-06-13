@@ -1,11 +1,13 @@
+import winston from 'winston';
+
 type LogLevel = 'DEBUG' | 'INFO' | 'WARNING' | 'ERROR' | 'CRITICAL';
 
-const levelPriority: Record<LogLevel, number> = {
-  DEBUG: 10,
-  INFO: 20,
-  WARNING: 30,
-  ERROR: 40,
-  CRITICAL: 50,
+const logLevels: Record<LogLevel, number> = {
+  CRITICAL: 0,
+  ERROR: 1,
+  WARNING: 2,
+  INFO: 3,
+  DEBUG: 4,
 };
 
 const sensitiveKeys = [
@@ -56,31 +58,43 @@ function redactMetadata(value: unknown): unknown {
   return value;
 }
 
+const redactFormat = winston.format((info) => {
+  for (const [key, value] of Object.entries(info)) {
+    if (key === 'level' || key === 'message') {
+      continue;
+    }
+
+    info[key] = shouldRedact(key) ? '[REDACTED]' : redactMetadata(value);
+  }
+
+  return info;
+});
+
+const messageFormat = winston.format.printf((info) => {
+  const { level, message, scope, ...metadata } = info;
+  const normalizedLevel = String(level).toUpperCase();
+  const metadataText =
+    Object.keys(metadata).length > 0 ? ` ${JSON.stringify(metadata, null, 2)}` : '';
+
+  return `[${normalizedLevel}] [${String(scope)}] ${String(message)}${metadataText}`;
+});
+
+const baseLogger = winston.createLogger({
+  levels: logLevels,
+  level: parseLevel(process.env.LOG_LEVEL),
+  format: winston.format.combine(redactFormat(), messageFormat),
+  transports: [new winston.transports.Console()],
+});
+
 function write(level: LogLevel, scope: string, message: string, metadata?: unknown): void {
-  const configuredLevel = parseLevel(process.env.LOG_LEVEL);
-
-  if (levelPriority[level] < levelPriority[configuredLevel]) {
-    return;
-  }
-
-  const prefix = `[${level}] [${scope}] ${message}`;
-  const redacted = metadata === undefined ? undefined : redactMetadata(metadata);
-
-  switch (level) {
-    case 'DEBUG':
-      console.debug(prefix, redacted ?? '');
-      break;
-    case 'INFO':
-      console.info(prefix, redacted ?? '');
-      break;
-    case 'WARNING':
-      console.warn(prefix, redacted ?? '');
-      break;
-    case 'ERROR':
-    case 'CRITICAL':
-      console.error(prefix, redacted ?? '');
-      break;
-  }
+  baseLogger.log(level, message, {
+    scope,
+    ...(metadata && typeof metadata === 'object' && !Array.isArray(metadata)
+      ? (metadata as Record<string, unknown>)
+      : metadata === undefined
+        ? {}
+        : { metadata }),
+  });
 }
 
 export function createLogger(scope: string) {

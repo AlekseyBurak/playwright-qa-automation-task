@@ -156,7 +156,7 @@ Ignored local files:
 
 ## Logging
 
-Logging is implemented in `src/logger` and has no external runtime dependency.
+Logging is implemented in `src/logger` with Winston.
 
 - Default level is `CRITICAL`.
 - API helpers log request payloads/headers and response statuses at `DEBUG`.
