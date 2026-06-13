@@ -1,0 +1,33 @@
+{
+  "name": "qa-automation-playwright-task",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TypeScript Playwright skeleton for UI, API, and E2E automation tests.",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test tests/ui",
+    "test:api": "playwright test tests/api",
+    "test:e2e": "playwright test tests/e2e",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome format --write ."
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "qa",
+    "automation",
+    "testing"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.0",
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^25.9.3",
+    "dotenv": "^17.4.2",
+    "typescript": "^5.8.3"
+  }
+}
