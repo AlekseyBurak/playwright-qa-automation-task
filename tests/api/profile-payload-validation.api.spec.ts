@@ -1,13 +1,17 @@
 import { test } from './fixtures/api.fixtures';
 import { authHeaders, expectPayloadRejected } from './helpers/payload';
 
-test.describe('Profile API payload validation', () => {
+test.describe('Profile API payload validation @api @profile', () => {
   const invalidProfilePayloads = [
-    { payload: { name: 123 }, title: 'PATCH /api/profile rejects numeric name' },
+    {
+      payload: { name: 123 },
+      title: 'PATCH /api/profile rejects numeric name @negative @validation @regression',
+    },
     { payload: { gender: 1 }, title: 'PATCH /api/profile rejects numeric gender' },
     {
       payload: { internalAnalyticsConsent: 'false' },
-      title: 'PATCH /api/profile rejects string analytics consent',
+      title:
+        'PATCH /api/profile rejects string analytics consent @negative @validation @regression',
     },
   ];
 

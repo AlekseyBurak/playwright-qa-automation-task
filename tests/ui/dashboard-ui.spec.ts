@@ -2,8 +2,8 @@ import { testData } from '../api/helpers/test-data';
 import { expect, test } from './fixtures/ui.fixtures';
 import { openDashboard } from './helpers/authenticated-pages';
 
-test.describe('Dashboard UI', () => {
-  test('Dashboard opens for authenticated user and shows todo controls', async ({
+test.describe('Dashboard UI @ui @todos @tags', () => {
+  test('Dashboard opens for authenticated user and shows todo controls @positive @smoke @regression', async ({
     page,
     sharedUser,
   }) => {
@@ -17,7 +17,10 @@ test.describe('Dashboard UI', () => {
     await expect(dashboardPage.completedFilterButton).toBeVisible();
   });
 
-  test('Dashboard adds todo and shows it in todo list', async ({ page, sharedUser }) => {
+  test('Dashboard adds todo and shows it in todo list @positive @smoke @regression', async ({
+    page,
+    sharedUser,
+  }) => {
     const dashboardPage = await openDashboard(page, sharedUser);
     const title = testData.todoTitle();
 
@@ -26,7 +29,10 @@ test.describe('Dashboard UI', () => {
     await expect(dashboardPage.todoItems().filter({ hasText: title })).toBeVisible();
   });
 
-  test('Tags sidebar toggle remains available on dashboard', async ({ page, sharedUser }) => {
+  test('Tags sidebar toggle remains available on dashboard @positive @regression', async ({
+    page,
+    sharedUser,
+  }) => {
     const dashboardPage = await openDashboard(page, sharedUser);
 
     await expect(dashboardPage.tagsSidebar.toggleButton).toBeVisible();
@@ -35,7 +41,10 @@ test.describe('Dashboard UI', () => {
     await expect(dashboardPage.todoForm).toBeVisible();
   });
 
-  test('Dashboard keeps empty todo submission out of todo list', async ({ page, sharedUser }) => {
+  test('Dashboard keeps empty todo submission out of todo list @negative @regression', async ({
+    page,
+    sharedUser,
+  }) => {
     const dashboardPage = await openDashboard(page, sharedUser);
     const todosBeforeSubmit = await dashboardPage.todoItems().count();
 
@@ -45,7 +54,10 @@ test.describe('Dashboard UI', () => {
     await expect(page).toHaveURL(/\/dashboard\.html$/);
   });
 
-  test('Dashboard filters completed todo out of active list', async ({ page, sharedUser }) => {
+  test('Dashboard filters completed todo out of active list @positive @regression', async ({
+    page,
+    sharedUser,
+  }) => {
     const dashboardPage = await openDashboard(page, sharedUser);
     const title = testData.todoTitle();
 
@@ -62,7 +74,7 @@ test.describe('Dashboard UI', () => {
     await expect(dashboardPage.todoItems().filter({ hasText: title })).toBeVisible();
   });
 
-  test('Dashboard delete modal cancel keeps todo and confirm removes todo', async ({
+  test('Dashboard delete modal cancel keeps todo and confirm removes todo @positive @regression', async ({
     page,
     sharedUser,
   }) => {
@@ -83,7 +95,7 @@ test.describe('Dashboard UI', () => {
     await expect(dashboardPage.todoItems().filter({ hasText: title })).toBeHidden();
   });
 
-  test('Dashboard tag sidebar opens and closes without leaving dashboard', async ({
+  test('Dashboard tag sidebar opens and closes without leaving dashboard @positive @regression', async ({
     page,
     sharedUser,
   }) => {

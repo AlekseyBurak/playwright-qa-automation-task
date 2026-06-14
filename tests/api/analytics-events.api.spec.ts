@@ -1,8 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { AnalyticsApiClient } from '../../src';
 
-test.describe('Analytics API', () => {
-  test('GET /api/analytics/events returns analytics event records', async ({ request }) => {
+test.describe('Analytics API @api @analytics', () => {
+  test('GET /api/analytics/events returns analytics event records @positive @smoke @regression', async ({
+    request,
+  }) => {
     const analyticsApi = new AnalyticsApiClient(request);
 
     const response = await analyticsApi.getEvents();
@@ -21,7 +23,9 @@ test.describe('Analytics API', () => {
     }
   });
 
-  test('GET /api/analytics/events rejects missing Basic Auth', async ({ request }) => {
+  test('GET /api/analytics/events rejects missing Basic Auth @negative @regression', async ({
+    request,
+  }) => {
     const analyticsApi = new AnalyticsApiClient(request);
 
     const response = await analyticsApi.getEventsWithoutBasicAuth();
@@ -29,7 +33,9 @@ test.describe('Analytics API', () => {
     expect(response.status()).toBe(401);
   });
 
-  test('GET /api/analytics/events rejects invalid Basic Auth', async ({ request }) => {
+  test('GET /api/analytics/events rejects invalid Basic Auth @negative @regression', async ({
+    request,
+  }) => {
     const analyticsApi = new AnalyticsApiClient(request);
 
     const response = await analyticsApi.getEventsWithBasicAuth('invalid-user', 'invalid-password');

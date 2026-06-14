@@ -2,8 +2,10 @@ import { VacancyApplicationPage } from '../../src';
 import { testData } from '../api/helpers/test-data';
 import { expect, test } from './fixtures/ui.fixtures';
 
-test.describe('Vacancy application UI', () => {
-  test('Vacancy application page renders request form controls', async ({ page }) => {
+test.describe('Vacancy application UI @ui @vacancy @applications', () => {
+  test('Vacancy application page renders request form controls @positive @smoke @regression', async ({
+    page,
+  }) => {
     const vacancyApplicationPage = new VacancyApplicationPage(page);
 
     await vacancyApplicationPage.open();
@@ -13,7 +15,9 @@ test.describe('Vacancy application UI', () => {
     await expect(vacancyApplicationPage.submitButton).toBeEnabled();
   });
 
-  test('Vacancy application form creates access credentials', async ({ page }) => {
+  test('Vacancy application form creates access credentials @positive @regression @rate-sensitive @opt-in', async ({
+    page,
+  }) => {
     test.skip(
       process.env.RUN_APPLICATION_TESTS !== '1',
       'Application provisioning is opt-in because it creates real admin credentials.',

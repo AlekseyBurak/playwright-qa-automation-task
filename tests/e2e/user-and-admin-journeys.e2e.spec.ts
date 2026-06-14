@@ -9,8 +9,10 @@ type UiUser = {
   password: string;
 };
 
-test.describe('E2E user and admin journeys', () => {
-  test('User registers through UI and creates a todo', async ({ page }) => {
+test.describe('E2E user and admin journeys @e2e @auth @admin @todos', () => {
+  test('User registers through UI and creates a todo @positive @smoke @regression @rate-sensitive', async ({
+    page,
+  }) => {
     const user = userForE2e();
     const registerPage = new RegisterPage(page);
     const dashboardPage = new DashboardPage(page);
@@ -25,7 +27,9 @@ test.describe('E2E user and admin journeys', () => {
     await expect(dashboardPage.todoItems().filter({ hasText: todoTitle })).toBeVisible();
   });
 
-  test('User can log out and log back in after registration', async ({ page }) => {
+  test('User can log out and log back in after registration @positive @regression @rate-sensitive', async ({
+    page,
+  }) => {
     const user = userForE2e();
     const registerPage = new RegisterPage(page);
     const dashboardPage = new DashboardPage(page);
@@ -46,7 +50,9 @@ test.describe('E2E user and admin journeys', () => {
     await expect(dashboardPage.todoForm).toBeVisible();
   });
 
-  test('Admin logs in, searches users and logs out', async ({ page }) => {
+  test('Admin logs in, searches users and logs out @positive @smoke @regression @rate-sensitive', async ({
+    page,
+  }) => {
     const adminPage = new AdminPage(page);
     const { email, password } = env.requireTestUser();
 

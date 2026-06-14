@@ -3,13 +3,15 @@ import { ApplicationsApiClient } from '../../src';
 import { expectPayloadRejected } from './helpers/payload';
 import { testData } from './helpers/test-data';
 
-test.describe('Applications API', () => {
+test.describe('Applications API @api @applications', () => {
   test.skip(
     process.env.RUN_APPLICATION_TESTS !== '1',
     'Application provisioning is opt-in because it creates real admin credentials.',
   );
 
-  test('POST /api/applications creates application credentials', async ({ request }) => {
+  test('POST /api/applications creates application credentials @positive @smoke @regression @rate-sensitive @opt-in', async ({
+    request,
+  }) => {
     const applicationsApi = new ApplicationsApiClient(request);
 
     const response = await applicationsApi.createApplication(testData.applicationFullName());
@@ -21,7 +23,9 @@ test.describe('Applications API', () => {
     expect(body.adminPassword).toEqual(expect.any(String));
   });
 
-  test('POST /api/applications rejects missing fullName', async ({ request }) => {
+  test('POST /api/applications rejects missing fullName @negative @regression @rate-sensitive', async ({
+    request,
+  }) => {
     const applicationsApi = new ApplicationsApiClient(request);
 
     const response = await applicationsApi.createApplication('');
@@ -29,7 +33,9 @@ test.describe('Applications API', () => {
     expect(response.ok()).toBe(false);
   });
 
-  test('POST /api/applications rejects numeric fullName', async ({ request }) => {
+  test('POST /api/applications rejects numeric fullName @negative @validation @regression @rate-sensitive', async ({
+    request,
+  }) => {
     const response = await request.post('/api/applications', {
       data: { fullName: 123 },
     });

@@ -2,8 +2,11 @@ import { testData } from '../api/helpers/test-data';
 import { expect, test } from './fixtures/ui.fixtures';
 import { openProfile } from './helpers/authenticated-pages';
 
-test.describe('Profile UI', () => {
-  test('Profile page shows current user form fields', async ({ page, sharedUser }) => {
+test.describe('Profile UI @ui @profile', () => {
+  test('Profile page shows current user form fields @positive @smoke @regression', async ({
+    page,
+    sharedUser,
+  }) => {
     const profilePage = await openProfile(page, sharedUser);
 
     await expect(profilePage.form).toBeVisible();
@@ -12,7 +15,10 @@ test.describe('Profile UI', () => {
     await expect(profilePage.submitButton).toBeEnabled();
   });
 
-  test('Profile form updates current user name', async ({ page, sharedUser }) => {
+  test('Profile form updates current user name @positive @regression', async ({
+    page,
+    sharedUser,
+  }) => {
     const profilePage = await openProfile(page, sharedUser);
     const nextName = testData.name();
 
@@ -21,7 +27,10 @@ test.describe('Profile UI', () => {
     await expect(profilePage.nameInput).toHaveValue(nextName);
   });
 
-  test('Password modal rejects mismatched confirmation', async ({ page, sharedUser }) => {
+  test('Password modal rejects mismatched confirmation @negative @regression', async ({
+    page,
+    sharedUser,
+  }) => {
     const profilePage = await openProfile(page, sharedUser);
 
     await profilePage.openPasswordModal();
@@ -32,7 +41,10 @@ test.describe('Profile UI', () => {
     await expect(profilePage.passwordModal).toBeVisible();
   });
 
-  test('Password modal can be dismissed without changing page', async ({ page, sharedUser }) => {
+  test('Password modal can be dismissed without changing page @positive @regression', async ({
+    page,
+    sharedUser,
+  }) => {
     const profilePage = await openProfile(page, sharedUser);
 
     await profilePage.openPasswordModal();
@@ -48,7 +60,10 @@ test.describe('Profile UI', () => {
     await expect(page).toHaveURL(/\/profile\.html$/);
   });
 
-  test('Profile form saves analytics consent change', async ({ page, sharedUser }) => {
+  test('Profile form saves analytics consent change @positive @regression', async ({
+    page,
+    sharedUser,
+  }) => {
     const profilePage = await openProfile(page, sharedUser);
     const consentBeforeUpdate = await profilePage.analyticsConsentCheckbox.isChecked();
 

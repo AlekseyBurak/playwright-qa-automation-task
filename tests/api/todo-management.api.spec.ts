@@ -21,8 +21,8 @@ function todoItems(body: unknown): unknown[] {
   return value.todos ?? value.items ?? [];
 }
 
-test.describe('Todos API', () => {
-  test('POST /api/todos creates todo and DELETE /api/todos/{id} removes it', async ({
+test.describe('Todos API @api @todos', () => {
+  test('POST /api/todos creates todo and DELETE /api/todos/{id} removes it @positive @smoke @regression', async ({
     request,
     sharedUser,
   }) => {
@@ -57,7 +57,10 @@ test.describe('Todos API', () => {
     expect(deleteResponse.ok()).toBe(true);
   });
 
-  test('POST /api/todos rejects empty title', async ({ request, sharedUser }) => {
+  test('POST /api/todos rejects empty title @negative @regression', async ({
+    request,
+    sharedUser,
+  }) => {
     const todoApi = new TodoApiClient(request);
 
     const response = await todoApi.createTodo(sharedUser.token, { title: '' });
@@ -65,7 +68,10 @@ test.describe('Todos API', () => {
     expect(response.ok()).toBe(false);
   });
 
-  test('PATCH /api/todos/{id} rejects unknown id', async ({ request, sharedUser }) => {
+  test('PATCH /api/todos/{id} rejects unknown id @negative @regression', async ({
+    request,
+    sharedUser,
+  }) => {
     const todoApi = new TodoApiClient(request);
 
     const response = await todoApi.updateTodo(sharedUser.token, unknownId, {
@@ -75,7 +81,10 @@ test.describe('Todos API', () => {
     expect(response.ok()).toBe(false);
   });
 
-  test('DELETE /api/todos/{id} rejects unknown id', async ({ request, sharedUser }) => {
+  test('DELETE /api/todos/{id} rejects unknown id @negative @regression', async ({
+    request,
+    sharedUser,
+  }) => {
     const todoApi = new TodoApiClient(request);
 
     const response = await todoApi.deleteTodo(sharedUser.token, unknownId);
@@ -83,7 +92,7 @@ test.describe('Todos API', () => {
     expect(response.ok()).toBe(false);
   });
 
-  test('GET /api/todos rejects missing bearer token', async ({ request }) => {
+  test('GET /api/todos rejects missing bearer token @negative @regression', async ({ request }) => {
     const todoApi = new TodoApiClient(request);
 
     const response = await todoApi.getTodos('');

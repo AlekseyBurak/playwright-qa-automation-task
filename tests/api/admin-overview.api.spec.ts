@@ -1,8 +1,8 @@
 import { AdminApiClient } from '../../src';
 import { expect, test } from './fixtures/api.fixtures';
 
-test.describe('Admin API', () => {
-  test('GET /api/admin/overview returns users with pagination metadata', async ({
+test.describe('Admin API @api @admin', () => {
+  test('GET /api/admin/overview returns users with pagination metadata @positive @smoke @regression', async ({
     adminApi,
     adminToken,
   }) => {
@@ -22,7 +22,7 @@ test.describe('Admin API', () => {
     );
   });
 
-  test('GET /api/admin/overview filters users by search query', async ({
+  test('GET /api/admin/overview filters users by search query @positive @regression', async ({
     adminApi,
     adminToken,
   }) => {
@@ -36,7 +36,9 @@ test.describe('Admin API', () => {
     expect(Array.isArray(overviewBody.users)).toBe(true);
   });
 
-  test('GET /api/admin/overview rejects invalid bearer token', async ({ request }) => {
+  test('GET /api/admin/overview rejects invalid bearer token @negative @regression', async ({
+    request,
+  }) => {
     const adminApi = new AdminApiClient(request);
 
     const response = await adminApi.getOverview('invalid-token');

@@ -1,8 +1,10 @@
 import { RegisterPage } from '../../src';
 import { expect, test } from './fixtures/ui.fixtures';
 
-test.describe('Registration UI', () => {
-  test('Registration page renders required account controls', async ({ page }) => {
+test.describe('Registration UI @ui @registration', () => {
+  test('Registration page renders required account controls @positive @smoke @regression', async ({
+    page,
+  }) => {
     const registerPage = new RegisterPage(page);
 
     await registerPage.open();
@@ -16,7 +18,7 @@ test.describe('Registration UI', () => {
     await expect(registerPage.submitButton).toBeEnabled();
   });
 
-  test('Registration form with empty required fields stays on registration page', async ({
+  test('Registration form with empty required fields stays on registration page @negative @regression', async ({
     page,
   }) => {
     const registerPage = new RegisterPage(page);
@@ -28,7 +30,7 @@ test.describe('Registration UI', () => {
     await expect(registerPage.form).toBeVisible();
   });
 
-  test('Registration login link returns to login page', async ({ page }) => {
+  test('Registration login link returns to login page @positive @regression', async ({ page }) => {
     const registerPage = new RegisterPage(page);
 
     await registerPage.open();

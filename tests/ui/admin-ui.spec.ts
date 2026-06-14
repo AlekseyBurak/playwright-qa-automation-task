@@ -2,8 +2,8 @@ import { AdminPage } from '../../src';
 import { expect, test } from './fixtures/ui.fixtures';
 import { openAdminPanel } from './helpers/authenticated-pages';
 
-test.describe('Admin UI', () => {
-  test('Admin page renders login form', async ({ page }) => {
+test.describe('Admin UI @ui @admin', () => {
+  test('Admin page renders login form @positive @smoke @regression', async ({ page }) => {
     const adminPage = new AdminPage(page);
 
     await adminPage.open();
@@ -14,7 +14,10 @@ test.describe('Admin UI', () => {
     await expect(adminPage.loginButton).toBeEnabled();
   });
 
-  test('Admin login opens overview panel', async ({ page, adminCredentials }) => {
+  test('Admin login opens overview panel @positive @smoke @regression @rate-sensitive', async ({
+    page,
+    adminCredentials,
+  }) => {
     const adminPage = new AdminPage(page);
 
     await adminPage.open();
@@ -25,7 +28,9 @@ test.describe('Admin UI', () => {
     await expect(adminPage.userSearchInput).toBeVisible();
   });
 
-  test('Admin login rejects invalid credentials', async ({ page }) => {
+  test('Admin login rejects invalid credentials @negative @regression @rate-sensitive', async ({
+    page,
+  }) => {
     const adminPage = new AdminPage(page);
 
     await adminPage.open();
@@ -35,7 +40,7 @@ test.describe('Admin UI', () => {
     await expect(adminPage.loginForm).toBeVisible();
   });
 
-  test('Admin user search keeps overview panel available', async ({
+  test('Admin user search keeps overview panel available @positive @regression', async ({
     page,
     adminToken,
     sharedUser,
@@ -48,7 +53,7 @@ test.describe('Admin UI', () => {
     await expect(adminPage.panel).toBeVisible();
   });
 
-  test('Admin event JSON modal opens and closes when event rows exist', async ({
+  test('Admin event JSON modal opens and closes when event rows exist @positive @regression', async ({
     page,
     adminToken,
   }) => {
@@ -66,7 +71,10 @@ test.describe('Admin UI', () => {
     await expect(adminPage.jsonModal.modal).toBeHidden();
   });
 
-  test('Admin logout returns to admin login form', async ({ page, adminToken }) => {
+  test('Admin logout returns to admin login form @positive @regression', async ({
+    page,
+    adminToken,
+  }) => {
     const adminPage = await openAdminPanel(page, adminToken);
 
     await adminPage.logout();

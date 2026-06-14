@@ -46,6 +46,11 @@ Real `.env` files are ignored by git.
 | `npm run test:ui` | Run browser UI tests from `tests/ui`. |
 | `npm run test:ui:all-browsers` | Run UI tests in Chromium, Firefox, and WebKit. |
 | `npm run test:e2e` | Run pure UI E2E journeys from `tests/e2e`. |
+| `npm run test:smoke` | Run tests tagged as critical smoke coverage. |
+| `npm run test:regression` | Run tests tagged for regular regression coverage. |
+| `npm run test:positive` | Run tests tagged as positive scenarios. |
+| `npm run test:negative` | Run tests tagged as negative scenarios. |
+| `npm run test:validation` | Run payload and datatype validation tests. |
 | `npm run test:headed` | Run Playwright in headed mode. |
 | `npm run report` | Open the Playwright HTML report. |
 | `npm run typecheck` | Run TypeScript checks without emitting files. |
@@ -109,6 +114,34 @@ import { env } from '../../src/config';
 Generated test data is centralized in `tests/api/helpers/test-data.ts`. Faker is
 used for realistic names and unique values while keeping app-compatible email,
 password, tag, and todo formats.
+
+## Test Tags
+
+Tests use Playwright title tags, so they can be selected with standard
+`--grep`.
+
+Tag groups:
+
+- Layer: `@api`, `@ui`, `@e2e`.
+- Feature: `@auth`, `@admin`, `@profile`, `@todos`, `@tags`, `@analytics`,
+  `@applications`, `@navigation`, `@registration`, `@vacancy`.
+- Scenario: `@positive`, `@negative`.
+- Execution: `@smoke`, `@regression`, `@validation`, `@rate-sensitive`,
+  `@opt-in`.
+
+Every new test should include a layer tag, a feature tag, and one scenario tag.
+Use `@smoke` only for critical happy-path coverage. Use `@rate-sensitive` for
+tests that consume strict auth or application provisioning limits. Use `@opt-in`
+for tests that require an explicit environment flag.
+
+Examples:
+
+```bash
+npm run test:smoke
+npm run test:negative
+npm run test:validation
+npx playwright test --grep "@api.*@auth"
+```
 
 ## Tested App Screens
 

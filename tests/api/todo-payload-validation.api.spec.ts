@@ -2,12 +2,12 @@ import { test } from './fixtures/api.fixtures';
 import { authHeaders, expectPayloadRejected } from './helpers/payload';
 import { entityId, testData } from './helpers/test-data';
 
-test.describe('Todos API payload validation', () => {
+test.describe('Todos API payload validation @api @todos', () => {
   const invalidCreatePayloads = [
     { payload: { title: 123 }, title: 'POST /api/todos rejects numeric title' },
     {
       payload: { tagIds: 'not-array', title: testData.todoTitle() },
-      title: 'POST /api/todos rejects string tagIds',
+      title: 'POST /api/todos rejects string tagIds @negative @validation @regression',
     },
   ];
 
@@ -24,8 +24,14 @@ test.describe('Todos API payload validation', () => {
 
   const invalidUpdatePayloads = [
     { payload: { title: 123 }, title: 'PATCH /api/todos/{id} rejects numeric title' },
-    { payload: { completed: 'true' }, title: 'PATCH /api/todos/{id} rejects string completed' },
-    { payload: { tagIds: 'not-array' }, title: 'PATCH /api/todos/{id} rejects string tagIds' },
+    {
+      payload: { completed: 'true' },
+      title: 'PATCH /api/todos/{id} rejects string completed @negative @validation @regression',
+    },
+    {
+      payload: { tagIds: 'not-array' },
+      title: 'PATCH /api/todos/{id} rejects string tagIds @negative @validation @regression',
+    },
   ];
 
   for (const { payload, title } of invalidUpdatePayloads) {

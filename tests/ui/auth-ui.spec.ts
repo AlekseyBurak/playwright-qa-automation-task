@@ -1,8 +1,10 @@
 import { LoginPage } from '../../src';
 import { expect, test } from './fixtures/ui.fixtures';
 
-test.describe('Auth UI', () => {
-  test('Login page renders email, password and submit controls', async ({ page }) => {
+test.describe('Auth UI @ui @auth', () => {
+  test('Login page renders email, password and submit controls @positive @smoke @regression', async ({
+    page,
+  }) => {
     const loginPage = new LoginPage(page);
 
     await loginPage.open();
@@ -13,7 +15,9 @@ test.describe('Auth UI', () => {
     await expect(loginPage.submitButton).toBeEnabled();
   });
 
-  test('Login form rejects invalid credentials and stays on login page', async ({ page }) => {
+  test('Login form rejects invalid credentials and stays on login page @negative @regression @rate-sensitive', async ({
+    page,
+  }) => {
     const loginPage = new LoginPage(page);
 
     await loginPage.open();
@@ -23,7 +27,7 @@ test.describe('Auth UI', () => {
     await expect(loginPage.form).toBeVisible();
   });
 
-  test('Login form authenticates registered user and opens dashboard', async ({
+  test('Login form authenticates registered user and opens dashboard @positive @smoke @regression @rate-sensitive', async ({
     page,
     sharedUser,
   }) => {
@@ -35,7 +39,7 @@ test.describe('Auth UI', () => {
     await expect(page).toHaveURL(/\/dashboard\.html$/);
   });
 
-  test('Register link opens registration page', async ({ page }) => {
+  test('Register link opens registration page @positive @regression', async ({ page }) => {
     const loginPage = new LoginPage(page);
 
     await loginPage.open();

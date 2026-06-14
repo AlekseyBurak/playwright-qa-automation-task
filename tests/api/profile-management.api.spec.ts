@@ -11,8 +11,8 @@ type ProfileResponse = {
   };
 };
 
-test.describe('Profile API', () => {
-  test('PATCH /api/profile updates name, gender and analytics consent', async ({
+test.describe('Profile API @api @profile', () => {
+  test('PATCH /api/profile updates name, gender and analytics consent @positive @smoke @regression', async ({
     request,
     sharedUser,
   }) => {
@@ -38,7 +38,9 @@ test.describe('Profile API', () => {
     expect((updatedProfile as ProfileResponse).user.internalAnalyticsConsent).toBe(false);
   });
 
-  test('GET /api/profile rejects missing bearer token', async ({ request }) => {
+  test('GET /api/profile rejects missing bearer token @negative @regression', async ({
+    request,
+  }) => {
     const profileApi = new ProfileApiClient(request);
 
     const response = await profileApi.getProfile('');
@@ -46,7 +48,7 @@ test.describe('Profile API', () => {
     expect(response.status()).toBe(401);
   });
 
-  test('POST /api/profile/password rejects mismatched confirmation', async ({
+  test('POST /api/profile/password rejects mismatched confirmation @negative @regression', async ({
     request,
     sharedUser,
   }) => {

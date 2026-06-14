@@ -34,8 +34,8 @@ function tagItems(body: unknown): unknown[] {
   return value.tags ?? value.items ?? [];
 }
 
-test.describe('Tags API', () => {
-  test('POST /api/tags creates tag and DELETE /api/tags/{id} removes it', async ({
+test.describe('Tags API @api @tags', () => {
+  test('POST /api/tags creates tag and DELETE /api/tags/{id} removes it @positive @smoke @regression', async ({
     request,
     sharedUser,
   }) => {
@@ -74,7 +74,10 @@ test.describe('Tags API', () => {
     expect(deleteEnsuredResponse.ok()).toBe(true);
   });
 
-  test('POST /api/tags rejects empty name', async ({ request, sharedUser }) => {
+  test('POST /api/tags rejects empty name @negative @regression', async ({
+    request,
+    sharedUser,
+  }) => {
     const tagsApi = new TagsApiClient(request);
 
     const response = await tagsApi.createTag(sharedUser.token, { color: fallbackColor, name: '' });
@@ -82,7 +85,10 @@ test.describe('Tags API', () => {
     expect(response.ok()).toBe(false);
   });
 
-  test('DELETE /api/tags/{id} rejects unknown id', async ({ request, sharedUser }) => {
+  test('DELETE /api/tags/{id} rejects unknown id @negative @regression', async ({
+    request,
+    sharedUser,
+  }) => {
     const tagsApi = new TagsApiClient(request);
 
     const response = await tagsApi.deleteTag(sharedUser.token, unknownId);
@@ -90,7 +96,7 @@ test.describe('Tags API', () => {
     expect(response.ok()).toBe(false);
   });
 
-  test('GET /api/tags rejects missing bearer token', async ({ request }) => {
+  test('GET /api/tags rejects missing bearer token @negative @regression', async ({ request }) => {
     const tagsApi = new TagsApiClient(request);
 
     const response = await tagsApi.getTags('');
