@@ -11,7 +11,9 @@
     "test:api": "playwright test tests/api",
     "test:e2e": "playwright test tests/e2e",
     "test:smoke": "playwright test --grep @smoke",
+    "test:smoke:safe": "playwright test --grep @smoke --grep-invert \"@rate-sensitive|@opt-in\"",
     "test:regression": "playwright test --grep @regression",
+    "test:regression:safe": "playwright test --grep @regression --grep-invert \"@rate-sensitive|@opt-in\"",
     "test:positive": "playwright test --grep @positive",
     "test:negative": "playwright test --grep @negative",
     "test:validation": "playwright test --grep @validation",
@@ -21,7 +23,6 @@
     "lint": "biome check .",
     "format": "biome format --write ."
   },
-  "author": "",
   "devDependencies": {
     "@biomejs/biome": "2.5.0",
     "@faker-js/faker": "10.4.0",

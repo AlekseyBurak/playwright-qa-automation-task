@@ -1,20 +1,11 @@
 import 'dotenv/config';
 
-type TestUser = {
-  email?: string;
-  password?: string;
-};
-
 type Environment = {
   baseUrl: string;
-  apiToken?: string;
   xAccessKey?: string;
-  analyticsBasicUser?: string;
-  analyticsBasicPassword?: string;
   logLevel: string;
-  testUser: TestUser;
   requireAnalyticsBasicAuth: () => { username: string; password: string };
-  requireTestUser: () => Required<TestUser>;
+  requireTestUser: () => { email: string; password: string };
 };
 
 function getOptional(name: string): string | undefined {
@@ -37,15 +28,8 @@ const baseUrl = getOptional('BASE_URL') ?? 'http://localhost:3000';
 
 export const env: Environment = {
   baseUrl,
-  apiToken: getOptional('API_TOKEN'),
   xAccessKey: getOptional('API_TOKEN'),
-  analyticsBasicUser: getOptional('ANALYTICS_BASIC_USER'),
-  analyticsBasicPassword: getOptional('ANALYTICS_BASIC_PASSWORD'),
   logLevel: getOptional('LOG_LEVEL') ?? 'CRITICAL',
-  testUser: {
-    email: getOptional('TEST_USER_EMAIL'),
-    password: getOptional('TEST_USER_PASSWORD'),
-  },
   requireAnalyticsBasicAuth: () => ({
     username: getRequired('ANALYTICS_BASIC_USER'),
     password: getRequired('ANALYTICS_BASIC_PASSWORD'),

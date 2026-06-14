@@ -47,7 +47,9 @@ Real `.env` files are ignored by git.
 | `npm run test:ui:all-browsers` | Run UI tests in Chromium, Firefox, and WebKit. |
 | `npm run test:e2e` | Run pure UI E2E journeys from `tests/e2e`. |
 | `npm run test:smoke` | Run tests tagged as critical smoke coverage. |
+| `npm run test:smoke:safe` | Run smoke tests excluding rate-sensitive and opt-in tests. |
 | `npm run test:regression` | Run tests tagged for regular regression coverage. |
+| `npm run test:regression:safe` | Run regression tests excluding rate-sensitive and opt-in tests. |
 | `npm run test:positive` | Run tests tagged as positive scenarios. |
 | `npm run test:negative` | Run tests tagged as negative scenarios. |
 | `npm run test:validation` | Run payload and datatype validation tests. |
@@ -134,10 +136,17 @@ Use `@smoke` only for critical happy-path coverage. Use `@rate-sensitive` for
 tests that consume strict auth or application provisioning limits. Use `@opt-in`
 for tests that require an explicit environment flag.
 
+Regular tagged scripts run all matching tests. Use the `*:safe` scripts for
+local checks that should avoid strict auth/application rate-limit flows. Tags do
+not override explicit runtime guards, so provisioning tests still require
+`RUN_APPLICATION_TESTS=1`.
+
 Examples:
 
 ```bash
 npm run test:smoke
+npm run test:smoke:safe
+npm run test:regression:safe
 npm run test:negative
 npm run test:validation
 npx playwright test --grep "@api.*@auth"
