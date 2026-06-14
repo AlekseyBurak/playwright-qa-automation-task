@@ -3,9 +3,11 @@ import { env } from '../config';
 import { createLogger } from '../logger';
 
 type RequestOptions = {
+  accessKey?: string;
   data?: unknown;
   headers?: Record<string, string>;
   params?: Record<string, string | number | boolean | undefined>;
+  useAccessKey?: boolean;
 };
 
 export abstract class BaseApiClient {
@@ -18,7 +20,7 @@ export abstract class BaseApiClient {
 
   protected async get(path: string, options: RequestOptions = {}): Promise<APIResponse> {
     const url = this.withParams(path, options.params);
-    const headers = this.headers(options.headers);
+    const headers = this.headers(options);
     this.logRequest('GET', url, { headers, params: options.params });
     const response = await this.request.get(url, {
       headers,
@@ -33,7 +35,7 @@ export abstract class BaseApiClient {
     data?: unknown,
     options: RequestOptions = {},
   ): Promise<APIResponse> {
-    const headers = this.headers(options.headers);
+    const headers = this.headers(options);
     this.logRequest('POST', path, { data, headers });
     const response = await this.request.post(path, {
       data,
@@ -49,7 +51,7 @@ export abstract class BaseApiClient {
     data?: unknown,
     options: RequestOptions = {},
   ): Promise<APIResponse> {
-    const headers = this.headers(options.headers);
+    const headers = this.headers(options);
     this.logRequest('PUT', path, { data, headers });
     const response = await this.request.put(path, {
       data,
@@ -65,7 +67,7 @@ export abstract class BaseApiClient {
     data?: unknown,
     options: RequestOptions = {},
   ): Promise<APIResponse> {
-    const headers = this.headers(options.headers);
+    const headers = this.headers(options);
     this.logRequest('PATCH', path, { data, headers });
     const response = await this.request.patch(path, {
       data,
@@ -78,7 +80,7 @@ export abstract class BaseApiClient {
 
   protected async delete(path: string, options: RequestOptions = {}): Promise<APIResponse> {
     const url = this.withParams(path, options.params);
-    const headers = this.headers(options.headers);
+    const headers = this.headers(options);
     this.logRequest('DELETE', url, { headers, params: options.params });
     const response = await this.request.delete(url, {
       headers,
@@ -92,10 +94,16 @@ export abstract class BaseApiClient {
     return token ? { Authorization: `Bearer ${token}` } : {};
   }
 
-  private headers(headers: Record<string, string> = {}): Record<string, string> {
+  private headers(options: RequestOptions): Record<string, string> {
+    const accessKey = options.accessKey ?? env.xAccessKey;
+
     return {
-      ...(env.xAccessKey ? { 'X-Access-Key': env.xAccessKey } : {}),
-      ...headers,
+      ...(options.useAccessKey === false
+        ? { 'X-Access-Key': '' }
+        : accessKey
+          ? { 'X-Access-Key': accessKey }
+          : {}),
+      ...options.headers,
     };
   }
 

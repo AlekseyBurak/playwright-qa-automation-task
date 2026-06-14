@@ -7,5 +7,8 @@ export { AuthApiClient } from './auth.api-client';
 export { BaseApiClient } from './base.api-client';
 export type { UpdateProfilePayload } from './profile.api-client';
 export { ProfileApiClient } from './profile.api-client';
+export type { CreateTagPayload, TagListParams } from './tags.api-client';
+export { TagsApiClient } from './tags.api-client';
+export type { CreateTodoPayload, TodoListParams, UpdateTodoPayload } from './todo.api-client';
 export { TodoApiClient } from './todo.api-client';
 export { UploadApiClient } from './upload.api-client';

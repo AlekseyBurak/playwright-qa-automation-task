@@ -84,6 +84,10 @@ npm run format
 - `tests/api` - API tests using Playwright request fixtures.
 - `tests/e2e` - end-to-end user journey tests.
 
+API tests run with one worker to stay within the test environment rate limits.
+Shared API fixtures reuse one admin login and one regular user registration for
+non-destructive checks. If the server returns `429`, the test fails.
+
 ## Page Objects
 
 Page objects live in `src/pages`:
@@ -117,11 +121,19 @@ API clients live in `src/api`:
 - `AdminApiClient`
 - `AnalyticsApiClient`
 - `ProfileApiClient`
+- `TagsApiClient`
 - `TodoApiClient`
 - `UploadApiClient`
 
 `BaseApiClient` automatically adds `X-Access-Key` when configured and provides
-shared request helpers for `GET`, `POST`, `PATCH`, and `DELETE`.
+shared request helpers for `GET`, `POST`, `PUT`, `PATCH`, and `DELETE`.
+
+Application provisioning tests call `POST /api/applications`, create real admin
+credentials, and are opt-in:
+
+```bash
+RUN_APPLICATION_TESTS=1 npm run test:api -- tests/api/application-provisioning.api.spec.ts
+```
 
 ## Configuration
 
@@ -136,6 +148,7 @@ Supported environment variables:
 - `ANALYTICS_BASIC_PASSWORD` - password for analytics events Basic Auth.
 - `X_ACCESS_KEY` - access key sent as the `X-Access-Key` header. If omitted, `API_TOKEN`
   is used as fallback.
+- `RUN_APPLICATION_TESTS` - set to `1` to run application provisioning API tests.
 - `LOG_LEVEL` - `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL`. Defaults to
   `CRITICAL`.
 

@@ -15,6 +15,13 @@ export class ProfileApiClient extends BaseApiClient {
     });
   }
 
+  async getProfileWithoutAccessKey(token: string): Promise<APIResponse> {
+    return this.get('/api/profile', {
+      headers: this.authHeaders(token),
+      useAccessKey: false,
+    });
+  }
+
   async updateProfile(token: string, payload: UpdateProfilePayload): Promise<APIResponse> {
     return this.patch('/api/profile', payload, {
       headers: this.authHeaders(token),
