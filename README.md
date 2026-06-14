@@ -9,6 +9,7 @@ quality checks before browser tests.
 - TypeScript
 - Playwright
 - Biome
+- Faker
 - GitHub Actions
 - Dotenv-based local configuration
 
@@ -59,7 +60,9 @@ Real `.env` files are ignored by git.
 
 ```bash
 npm test
+npm run test:all-browsers
 npm run test:ui
+npm run test:ui:all-browsers
 npm run test:api
 npm run test:e2e
 npm run test:headed
@@ -87,6 +90,9 @@ npm run format
 API tests run with one worker to stay within the test environment rate limits.
 Shared API fixtures reuse one admin login and one regular user registration for
 non-destructive checks. If the server returns `429`, the test fails.
+
+Default Playwright runs use the Chromium project only. Use the all-browser
+commands to run Chromium, Firefox, and WebKit.
 
 ## Page Objects
 
@@ -127,6 +133,8 @@ API clients live in `src/api`:
 
 `BaseApiClient` automatically adds `X-Access-Key` when configured and provides
 shared request helpers for `GET`, `POST`, `PUT`, `PATCH`, and `DELETE`.
+Generated test data is centralized in `tests/api/helpers/test-data.ts` and uses
+Faker with app-compatible email, password, tag, and todo formats.
 
 Application provisioning tests call `POST /api/applications`, create real admin
 credentials, and are opt-in:
@@ -149,6 +157,7 @@ Supported environment variables:
 - `X_ACCESS_KEY` - access key sent as the `X-Access-Key` header. If omitted, `API_TOKEN`
   is used as fallback.
 - `RUN_APPLICATION_TESTS` - set to `1` to run application provisioning API tests.
+- `RUN_ALL_BROWSERS` - set to `1` to include Firefox and WebKit Playwright projects.
 - `LOG_LEVEL` - `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL`. Defaults to
   `CRITICAL`.
 

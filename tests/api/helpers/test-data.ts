@@ -1,11 +1,14 @@
-const suffix = (): string => `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+import { faker } from '@faker-js/faker';
+
+const suffix = (): string =>
+  `${Date.now()}-${faker.string.alphanumeric({ casing: 'lower', length: 8 })}`;
 
 export const testData = {
-  applicationFullName: (): string => `QA Application ${suffix()}`,
+  applicationFullName: (): string => faker.person.fullName(),
   email: (): string => `qa-${suffix()}@vacancy.local`,
-  name: (): string => `QA User ${suffix()}`,
+  name: (): string => faker.person.fullName(),
   password: (): string => `Qa_${suffix()}_A1!`,
-  tagName: (): string => `qa-tag-${suffix()}`,
+  tagName: (): string => `qa-${faker.word.noun()}-${suffix()}`,
   todoTitle: (): string => `QA todo ${suffix()}`,
 };
 
