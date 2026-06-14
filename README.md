@@ -1,8 +1,9 @@
 # QA Automation Playwright Task
 
-TypeScript automation QA scaffold for UI, API, and E2E tests. Playwright is the
-main test runner, Biome handles linting/format checks, and GitHub Actions runs
-quality checks before browser tests.
+TypeScript automation framework for the recruitment test app. The repository
+covers API, UI, and E2E layers with Playwright, uses Page Object Model for UI
+coverage, Biome for quality checks, Winston for logging, Faker for generated test
+data, and GitHub Actions for CI.
 
 ## Stack
 
@@ -10,8 +11,71 @@ quality checks before browser tests.
 - Playwright
 - Biome
 - Faker
+- Winston
 - GitHub Actions
-- Dotenv-based local configuration
+- Dotenv-based configuration
+
+## Quick Start
+
+```bash
+npm install
+npx playwright install
+cp .env.example .env
+```
+
+Update `.env` with the target app credentials and access key, then run the checks
+you need:
+
+```bash
+npm run typecheck
+npm run lint
+npm run test:api
+npm run test:ui
+npm run test:e2e
+```
+
+Real `.env` files are ignored by git.
+
+## Commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm test` | Run the full Playwright suite with the default Chromium project. |
+| `npm run test:all-browsers` | Run the full suite in Chromium, Firefox, and WebKit. |
+| `npm run test:api` | Run API tests from `tests/api`. |
+| `npm run test:ui` | Run browser UI tests from `tests/ui`. |
+| `npm run test:ui:all-browsers` | Run UI tests in Chromium, Firefox, and WebKit. |
+| `npm run test:e2e` | Run pure UI E2E journeys from `tests/e2e`. |
+| `npm run test:headed` | Run Playwright in headed mode. |
+| `npm run report` | Open the Playwright HTML report. |
+| `npm run typecheck` | Run TypeScript checks without emitting files. |
+| `npm run lint` | Run Biome lint and format checks. |
+| `npm run format` | Format files with Biome. |
+
+Default Playwright execution uses Chromium only. Set `RUN_ALL_BROWSERS=1` through
+the provided scripts to include Firefox and WebKit.
+
+## Configuration
+
+Supported environment variables:
+
+| Variable | Required for | Description |
+| --- | --- | --- |
+| `BASE_URL` | All tests | Tested app origin. API requests use the same origin. Defaults to `http://localhost:3000`. |
+| `TEST_USER_EMAIL` | Admin UI/API/E2E | Admin account email issued for the task. |
+| `TEST_USER_PASSWORD` | Admin UI/API/E2E | Password for `TEST_USER_EMAIL`. |
+| `API_TOKEN` | API/UI access | Issued access key sent as the `X-Access-Key` header. |
+| `ANALYTICS_BASIC_USER` | Analytics API tests | HTTP Basic Auth username for `GET /api/analytics/events`. |
+| `ANALYTICS_BASIC_PASSWORD` | Analytics API tests | HTTP Basic Auth password for `GET /api/analytics/events`. |
+| `RUN_APPLICATION_TESTS` | Opt-in API tests | Set to `1` to run application provisioning tests. |
+| `RUN_ALL_BROWSERS` | Browser selection | Set to `1` to include Firefox and WebKit projects. |
+| `LOG_LEVEL` | Logging | `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL`. Defaults to `CRITICAL`. |
+
+Typed config is exported from `src/config`:
+
+```ts
+import { env } from '../../src/config';
+```
 
 ## Project Structure
 
@@ -34,43 +98,17 @@ quality checks before browser tests.
 └── tsconfig.json
 ```
 
-## Setup
+## Test Strategy
 
-Install dependencies:
+- `tests/api` covers API contracts with Playwright request fixtures and API
+  clients from `src/api`.
+- `tests/ui` covers browser-level behavior with page objects from `src/pages`.
+- `tests/e2e` contains pure UI user journeys that avoid API setup and API
+  response assertions.
 
-```bash
-npm install
-```
-
-Install Playwright browsers for local runs:
-
-```bash
-npx playwright install
-```
-
-Create local environment config:
-
-```bash
-cp .env.example .env
-```
-
-Real `.env` files are ignored by git.
-
-## Commands
-
-```bash
-npm test
-npm run test:all-browsers
-npm run test:ui
-npm run test:ui:all-browsers
-npm run test:api
-npm run test:e2e
-npm run test:headed
-npm run report
-npm run typecheck
-npm run lint
-npm run format
-```
+Generated test data is centralized in `tests/api/helpers/test-data.ts`. Faker is
+used for realistic names and unique values while keeping app-compatible email,
+password, tag, and todo formats.
 
 ## Tested App Screens
 
@@ -80,19 +118,6 @@ npm run format
 - `/profile.html` - profile: name, gender, avatar, analytics consent, password change.
 - `/admin.html` - admin login and admin users panel.
 - `/vacancy-application.html` - access key and admin credentials application.
-
-## Test Organization
-
-- `tests/ui` - browser-level UI tests.
-- `tests/api` - API tests using Playwright request fixtures.
-- `tests/e2e` - end-to-end user journey tests.
-
-API tests run with one worker to stay within the test environment rate limits.
-Shared API fixtures reuse one admin login and one regular user registration for
-non-destructive checks. If the server returns `429`, the test fails.
-
-Default Playwright runs use the Chromium project only. Use the all-browser
-commands to run Chromium, Firefox, and WebKit.
 
 ## Page Objects
 
@@ -132,9 +157,7 @@ API clients live in `src/api`:
 - `UploadApiClient`
 
 `BaseApiClient` automatically adds `X-Access-Key` when configured and provides
-shared request helpers for `GET`, `POST`, `PUT`, `PATCH`, and `DELETE`.
-Generated test data is centralized in `tests/api/helpers/test-data.ts` and uses
-Faker with app-compatible email, password, tag, and todo formats.
+shared helpers for `GET`, `POST`, `PUT`, `PATCH`, and `DELETE`.
 
 Application provisioning tests call `POST /api/applications`, create real admin
 credentials, and are opt-in:
@@ -143,38 +166,14 @@ credentials, and are opt-in:
 RUN_APPLICATION_TESTS=1 npm run test:api -- tests/api/application-provisioning.api.spec.ts
 ```
 
-## Configuration
+## Known Constraints
 
-Supported environment variables:
-
-- `BASE_URL` - target app URL. Defaults to `http://localhost:3000`.
-- `API_BASE_URL` - API URL when it differs from `BASE_URL`.
-- `TEST_USER_EMAIL` - UI/E2E test user email.
-- `TEST_USER_PASSWORD` - UI/E2E test user password.
-- `API_TOKEN` - API token/access key fallback.
-- `ANALYTICS_BASIC_USER` - username for analytics events Basic Auth.
-- `ANALYTICS_BASIC_PASSWORD` - password for analytics events Basic Auth.
-- `X_ACCESS_KEY` - access key sent as the `X-Access-Key` header. If omitted, `API_TOKEN`
-  is used as fallback.
-- `RUN_APPLICATION_TESTS` - set to `1` to run application provisioning API tests.
-- `RUN_ALL_BROWSERS` - set to `1` to include Firefox and WebKit Playwright projects.
-- `LOG_LEVEL` - `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL`. Defaults to
-  `CRITICAL`.
-
-Use typed config from `src/config`:
-
-```ts
-import { env } from '../../src/config';
-```
-
-Ignored local files:
-
-- `.env`
-- `.env.*`
-- `.auth/`
-- `.playwright-mcp/`
-- `playwright-report/`
-- `test-results/`
+- The tested environment has strict rate limits. If the server returns `429`, the
+  test fails; throttling is treated as a real environment failure.
+- API fixtures reuse a shared regular user and admin token where possible to
+  reduce auth traffic.
+- Application provisioning is disabled by default because it creates real admin
+  credentials and has a low hourly limit.
 
 ## Logging
 
@@ -196,8 +195,6 @@ LOG_LEVEL=DEBUG npm run test:api
 
 GitHub Actions runs on pushes and pull requests to `main`.
 
-The workflow has two jobs:
-
 - `quality` runs on `ubuntu-latest`, installs dependencies, runs TypeScript
   checks, and runs Biome checks.
 - `test` waits for `quality`, runs inside
@@ -207,7 +204,6 @@ The workflow has two jobs:
 The test job reads these GitHub Actions secrets:
 
 - `BASE_URL`
-- `API_BASE_URL`
 - `TEST_USER_EMAIL`
 - `TEST_USER_PASSWORD`
 - `API_TOKEN`

@@ -21,7 +21,7 @@ export const test = base.extend<{}, ApiWorkerFixtures>({
     // biome-ignore lint/correctness/noEmptyPattern: Playwright fixtures require object destructuring.
     async ({}, use) => {
       const context = await playwrightRequest.newContext({
-        baseURL: env.apiBaseUrl,
+        baseURL: env.baseUrl,
         extraHTTPHeaders: env.xAccessKey ? { 'X-Access-Key': env.xAccessKey } : {},
       });
 
